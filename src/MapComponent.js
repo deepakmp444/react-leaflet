@@ -1,11 +1,17 @@
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'; // Import leaflet library
 import iconUrl from './marker-icon-2x.png'; // Import your custom icon
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-function MapComponent() {
-    const position = [25.561808907870695, 85.15502929687501];
+function MapComponent({ LonLat }) {
+    const [position, setPosition] = useState([25.561808907870695, 85.15502929687501]);
     const [markers, setMarkers] = useState([]);
+
+    useEffect(() => {
+        if ((LonLat && LonLat.lat && LonLat.lon)) {
+            setPosition([LonLat.lat, LonLat.lon])
+        }
+    }, [LonLat])
 
     // Define custom icon
     const customIcon = L.icon({
@@ -14,7 +20,6 @@ function MapComponent() {
         iconAnchor: [15, 30], // Anchor point of the icon (relative to its top left corner)
         popupAnchor: [0, -30] // Anchor point of the popup (relative to the marker)
     });
-
 
     const handleClick = (e) => {
         console.log('e:', e)
@@ -44,7 +49,7 @@ function MapComponent() {
             />
 
             <AddMarkerOnClick />
-            
+
             <Marker position={position} icon={customIcon}> {/* Assign custom icon to Marker */}
                 <Popup>
                     First Marker <br /> Easily customizable.
